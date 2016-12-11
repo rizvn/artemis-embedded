@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Riz
@@ -23,7 +24,8 @@ public class EmbeddedBrokerTest {
 
 
   @Test
-  public void simpleTest() throws Exception {
+  public void simpleTest() throws Exception
+  {
     Map<String, Object> transportParams = new HashMap<>();
     transportParams.put(TransportConstants.PORT_PROP_NAME, 6161);
     TransportConfiguration connectorConf = new TransportConfiguration(NettyConnectorFactory.class.getName(), transportParams);
@@ -43,6 +45,7 @@ public class EmbeddedBrokerTest {
     EmbeddedActiveMQ embedded = new EmbeddedActiveMQ();
     embedded.setConfiguration(embeddedConf);
     embedded.start();
+
 
     final String data = "Simple Text " + UUID.randomUUID().toString();
     final String queueName = "simpleQueue";
@@ -93,8 +96,35 @@ public class EmbeddedBrokerTest {
     String receivedData = message.getBodyBuffer().readString();
     assertEquals(data, receivedData);
     System.out.println(receivedData);
+  }
+
+  @Test
+  public void fullTest()throws Exception{
+    //create broker
+    Broker broker = new Broker(6161).start();
+
+    //define what to do with message when it is received
+    MessageHandler messageHandler =  message -> {
+      try {
+        System.out.println(message.getBodyBuffer().readString());
+        message.acknowledge();
+      }
+      catch (Exception ex){
+        throw new IllegalStateException(ex);
+      }
+    };
+
+    //create message consumer
+    Consumer consumer = new Consumer("tcp://localhost:6161", "address1", "queue1", messageHandler);
+
+    //create a message producer
+    Producer producer = new Producer("tcp://localhost:6161", "address1", "queue1");
 
 
-
+    //create a message every 3 seconds
+    while (true){
+      producer.sendMessage("Hello world");
+      Thread.sleep(3000);
+    }
   }
 }
