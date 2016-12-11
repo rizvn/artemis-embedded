@@ -101,7 +101,8 @@ public class EmbeddedBrokerTest {
   }
 
   @Test
-  public void fullTest()throws Exception{
+  public void fullTest()throws Exception
+  {
     //create broker
     Broker broker = new Broker().setPort(6161).start();
 
@@ -118,9 +119,9 @@ public class EmbeddedBrokerTest {
 
     //create message consumer
     Consumer consumer = new Consumer("tcp://localhost:6161", "address1", "queue1", messageHandler);
+
     //create a message producer
     Producer producer = new Producer("tcp://localhost:6161", "address1", "queue1");
-
 
     //create a message every 3 seconds
     while (true){
