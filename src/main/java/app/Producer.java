@@ -21,6 +21,9 @@ public class Producer {
       ClientSessionFactory sessionFactory = serverLocator.createSessionFactory();
 
       session = sessionFactory.createSession();
+      // Create a producer to send a message to the previously created address.
+      producer = session.createProducer(addressName);
+
 
       // Create a queue bound to a particular address where the test will send to & consume from.
 
@@ -39,14 +42,13 @@ public class Producer {
 
   public void sendMessage(String messageBody){
     try {
-      // Create a producer to send a message to the previously created address.
-      producer = session.createProducer(addressName);
 
       // Create a non-durable message.
       ClientMessage message = session.createMessage(true);
 
       // Put some data into the message.
       message.getBodyBuffer().writeString(messageBody);
+
 
       // Send the message. This send will be auto-committed based on the way the session was created in setUp()
       producer.send(message);

@@ -12,7 +12,9 @@ import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -101,7 +103,7 @@ public class EmbeddedBrokerTest {
   @Test
   public void fullTest()throws Exception{
     //create broker
-    Broker broker = new Broker(6161).start();
+    Broker broker = new Broker().setPort(6161).start();
 
     //define what to do with message when it is received
     MessageHandler messageHandler =  message -> {
@@ -116,14 +118,13 @@ public class EmbeddedBrokerTest {
 
     //create message consumer
     Consumer consumer = new Consumer("tcp://localhost:6161", "address1", "queue1", messageHandler);
-
     //create a message producer
     Producer producer = new Producer("tcp://localhost:6161", "address1", "queue1");
 
 
     //create a message every 3 seconds
     while (true){
-      producer.sendMessage("Hello world");
+      producer.sendMessage(LocalDateTime.now().toString() + " Hello world" );
       Thread.sleep(3000);
     }
   }

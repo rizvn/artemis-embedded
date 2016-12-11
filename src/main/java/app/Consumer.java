@@ -21,7 +21,7 @@ public class Consumer {
       ServerLocator serverLocator = ActiveMQClient.createServerLocator(uri);
       ClientSessionFactory sessionFactory = serverLocator.createSessionFactory();
 
-      session = sessionFactory.createSession();
+      session = sessionFactory.createSession(false, false);
 
       // Create a queue bound to a particular address where the test will send to & consume from.
 

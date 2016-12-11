@@ -17,11 +17,17 @@ import java.util.Map;
 public class Broker {
 
   EmbeddedActiveMQ embedded;
-  Integer port;
+  Integer port = 61617;
 
-  public Broker(int port)
+  public Broker()
+  {
+
+  }
+
+  public Broker setPort(Integer port)
   {
     this.port = port;
+    return this;
   }
 
 
