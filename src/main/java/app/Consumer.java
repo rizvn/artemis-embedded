@@ -18,10 +18,13 @@ public class Consumer {
     try {
       this.addressName = addressName;
       this.queuName = queueName;
+      this.messageHandler = messageHandler;
+
       ServerLocator serverLocator = ActiveMQClient.createServerLocator(uri);
       ClientSessionFactory sessionFactory = serverLocator.createSessionFactory();
 
       session = sessionFactory.createSession(false, false);
+      messageHandler.setSession(session);
 
       // Create a queue bound to a particular address where the test will send to & consume from.
 
@@ -31,7 +34,7 @@ public class Consumer {
         session.createQueue(addressName, queueName, true);
       }
       consumer = session.createConsumer(queueName);
-      consumer.setMessageHandler(messageHandler);
+      consumer.setMessageHandler(this.messageHandler);
 
       // Start the session to allow messages to be consumed.
       session.start();
@@ -52,4 +55,7 @@ public class Consumer {
     }
   }
 
+  public ClientSession getSession() {
+    return session;
+  }
 }

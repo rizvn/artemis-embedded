@@ -107,15 +107,7 @@ public class EmbeddedBrokerTest {
     Broker broker = new Broker().setPort(6161).start();
 
     //define what to do with message when it is received
-    MessageHandler messageHandler =  message -> {
-      try {
-        System.out.println(message.getBodyBuffer().readString());
-        message.acknowledge();
-      }
-      catch (Exception ex){
-        throw new IllegalStateException(ex);
-      }
-    };
+    MessageHandler messageHandler = new MessageHandler();
 
     //create message consumer
     Consumer consumer = new Consumer("tcp://localhost:6161", "address1", "queue1", messageHandler);
