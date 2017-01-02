@@ -27,6 +27,13 @@
       <version>${artemis.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>artemis-jms-client</artifactId>
+      <version>${artemis.version}</version>
+    </dependency>
+
+
 
     <dependency>
       <groupId>junit</groupId>
